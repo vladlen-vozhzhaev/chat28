@@ -31,16 +31,20 @@ public class Server {
                         try {
                             boolean isAuth = false;
                             while (!isAuth){
-                                user.getOut().writeUTF("Телефон: ");
+                                String authData = user.getIs().readUTF();
+                                String phone = authData.split("//")[1];
+                                String pass = authData.split("//")[2];
+                                /*user.getOut().writeUTF("Телефон: ");
                                 String phone = user.getIs().readUTF();
                                 user.getOut().writeUTF("Пароль: ");
-                                String pass = user.getIs().readUTF();
+                                String pass = user.getIs().readUTF();*/
                                 Connection connection = DriverManager.getConnection(db_url, db_login, db_pass);
                                 Statement statement = connection.createStatement();
                                 ResultSet resultSet = statement.executeQuery("SELECT * FROM `users` WHERE `phone`='"+phone+"' AND `pass`='"+pass+"'");
                                 if(resultSet.next()) isAuth = true;
-                                else user.getOut().writeUTF("Неправильный логин или пароль, попробуйте ещё раз");
+                                else user.getOut().writeUTF("error");
                             }
+                            user.getOut().writeUTF("success");
                             users.add(user);
                             //System.out.println(resultSet.getString("name"));
                             user.getOut().writeUTF("Введите имя: ");
